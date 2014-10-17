@@ -6,6 +6,28 @@
 #include "mmsystem.h"
 
 #pragma comment( lib, "vfw32.lib" )                 // Search For VFW32.lib While Linking
+
+
+
+#define BLACK 0
+#define BLUE 1
+#define GREEN 2
+#define CYAN 3
+#define RED 4
+#define MAGENTA 5
+#define BROWN 6
+#define LIGHTGREY 7
+#define DARKGREY 8
+#define LIGHTBLUE 9
+#define LIGHTGREEN 10
+#define LIGHTCYAN 11
+#define LIGHTRED 12
+#define LIGHTMAGENTA 13
+#define YELLOW 14
+#define WHITE 15
+#define BLINK 12
+
+
 //#include <P:\winmm.h>
 
 
@@ -226,15 +248,19 @@ void Statusanzeige()
 
     cout << endl;
     cout << "Leben: ";
+    // Herze Rot ferben
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+    FOREGROUND_INTENSITY | FOREGROUND_RED);
     for(size_t i=0; i < Leben; i++)
     {
         cout << char(3);
     }
+    // Farbe wieder zurücksetzen
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+    FOREGROUND_INTENSITY | FOREGROUND_GREEN);
     cout << endl << "Geld: " << Geld;
 
 }
-
-//HWND m_Video = MCIWndCreate(NULL,NULL,WS_BORDER,"P:\\Programme\\mpg123\\8-bit.mp3");
 
 
 
@@ -249,8 +275,8 @@ Spielfeld[0][6].at(1)=char(3);
 
 //mciSendString("play P:\\8.mp3 repeat",0,0,0);
 
-mciSendString("open P:\\8.mp3 alias MY_SND",0,0,0);
-mciSendString("play MY_SND",0,0,0);
+mciSendString("open 8.mp3 alias MY_SND",0,0,0);
+mciSendString("play MY_SND repeat",0,0,0);
 
 // etc
 
@@ -268,9 +294,17 @@ mciSendString("play MY_SND",0,0,0);
 
 
 
-system("color F0");
-Statusanzeige();
+// FOREGROUND_YELLOW + FOREGROUND_INTENSITY
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
 
+
+
+system("color F0");
+
+// FOREGROUND_YELLOW + FOREGROUND_INTENSITY + BACKGROUND_RED + BACKGROUND_INTENSITY
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | BACKGROUND_INTENSITY | BACKGROUND_RED);
 
 //WinExec(HHH.c_str(),0);
 //ShellExecute(NULL, "open", "P:\\Programme\\mpg123\\mpg123.exe", "P:\\Programme\\mpg123\\mpg123\\8-bit.mp3", NULL, SW_SHOWNORMAL);

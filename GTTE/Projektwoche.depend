@@ -25,3 +25,11 @@
 	<vfw.h>
 	"mmsystem.h"
 
+1380656854 source:c:\users\nico\desktop\projektwoche di\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<vfw.h>
+	"mmsystem.h"
+
