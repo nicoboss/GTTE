@@ -1,11 +1,16 @@
-#include <iostream>
-#include <windows.h>
-#include <vector>
-#include <string>
-#include <vfw.h>
-#include "mmsystem.h"
+#include <iostream>     //Standartbibliothek
+#include <windows.h>    //Standartbibliothek
+#include <vector>       //neue Arreys
+#include <string>       //neue Strings
+#include "mmsystem.h"   //Soundencoder
+#include <locale.h>     //Deeeutsches Sprachpacket für Umlaute
 
-#pragma comment( lib, "vfw32.lib" )                 // Search For VFW32.lib While Linking
+
+
+
+
+
+
 
 
 
@@ -37,27 +42,27 @@ using namespace std;
 //vector<string> Spielfeld;using namespace std;
 
 
-string Spielfeld[3][10] {
+string Spielfeld[3][11] {
     {
         {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"},
         {"X  X   X$X         XXX            XX     X \n"},
-        {"X XX X X XX    XX XXXX XXX   X   XXX XXX X \n"},
+        {"X XX X X XX    XX XXXX XXX       XXX XXX X \n"},
         {"X      X       X        XXX     XX     X XX\n"},
         {"XXXXXX X XX    XX XXXXXXX$XX   XXX  X  X   \n"},
-        {"X    X   X         X       X   XXX     X XX\n"},
-        {"X?XX   XXXXXXXXXXXXX XXXXX XX XXXXXX XXX ? \n"},
+        {"X    X   X         X       X   XXX    XX XX\n"},
+        {"X?XX   XXXXXXXXXXXXX XXXXX XX XXXXXX XX? X \n"},
         {"X    XXX$$                            XX X \n"},
         {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"}
     },
 
     {
         {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"},
-        {"X  X   X$X         XXX     r      XX     X \n"},
+        {"X  X   X$X         XXX            XX     X \n"},
         {"X XX X X XX    XX XXXX XXX       XXX XXX X \n"},
         {"X      X       X        XXX     XX     X XX\n"},
         {"XXXXXX X XX    XX XXXXXXX$XX   XXX  X  X   \n"},
-        {"X    X   X         X       X   XXX     X XX\n"},
-        {"X?XX   XXXXXXXXXXXXX XXXXX XX XXXXXX XXX ? \n"},
+        {"X    X   X         X       X   XXX    XX XX\n"},
+        {"X?XX   XXXXXXXXXXXXX XXXXX XX XXXXXX XX? X \n"},
         {"X    XXX$$                            XX X \n"},
         {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"}
     }
@@ -71,6 +76,7 @@ string Spielfeld[3][10] {
 vector<vector<vector<vector<unsigned int>>>> Feind{
 {
     {{6, 3},{5, 3},{4, 3},{3, 3},{2, 3},{1, 3}},
+    {{6, 3},{5, 3},{4, 3},{3, 3},{2, 3},{1, 3}},
     {{6, 1},{6, 2},{6, 3},{6, 4},{6, 5},{6, 6}},
     {{1, 5},{2, 5},{3, 5},{4, 5},{4, 6},{4, 7},{3, 7},{2, 7},{1, 7}},
     {{8, 3},{9, 3},{10, 3},{11, 3},{12, 3},{13, 3},{14, 3}},
@@ -78,15 +84,14 @@ vector<vector<vector<vector<unsigned int>>>> Feind{
     {{10, 1},{11, 1},{12, 1},{13, 1},{14, 1},{15, 1},{16, 1},{17, 1},{18, 1}},
     {{10, 5},{11, 5},{12, 5},{13, 5},{14, 5},{15, 5},{16, 5},{17, 5},{18, 5}},
     {{16, 3},{17, 3},{18, 3},{19, 3},{20, 3},{21, 3},{22, 3},{23, 3}},
-    {{10, 7},{11, 7},{12, 7},{13, 7},{14, 7},{15, 7},{16, 7},{17, 7},{18, 7},{19, 7},{20, 7},{21, 7},{22, 7},
-    {23, 7},{24, 7},{25, 7},{26, 7},{27, 7},{28, 7},{29, 7},{30, 7},{31, 7},{32, 7},{33, 7},{34, 7},{35, 7},{36, 7},{37, 7},{38, 7}},
-    {{29, 2},{29, 3},{29, 4},{29, 5},{29, 6},{29, 7}},
+    {{37, 7},{36, 7},{35, 7},{34, 7},{33, 7},{32, 7},{31, 7},{30, 7},{29, 7},{28, 7},{27, 7},{26, 7},{25, 7},
+    {24, 7},{23, 7},{22, 7},{21, 7},{20, 7},{19, 7},{18, 7},{17, 7},{16, 7},{15, 7},{14, 7},{13, 7},{12, 7},{11, 7},{10, 7}},
+    {{20, 5},{21, 5},{22, 5},{23, 5},{24, 5},{25, 5},{26, 5}},
+    {{29, 7},{29, 6},{29, 5},{29, 4},{29, 3},{29, 2},{29, 1}},
+    {{37, 5},{36, 5},{35, 5},{34, 5},{34, 4},{34, 3},{35, 3},{36, 3},{37, 3},{38, 3},{38, 4}},
+    {{40, 5},{40, 6},{40, 7}},
 },
 {
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
     {{0, 0}, {0, 0}, {0, 0},{0, 0}},
     {{0, 0}, {0, 0}, {0, 0},{0, 0}},
     {{0, 0}, {0, 0}, {0, 0},{0, 0}},
@@ -99,19 +104,19 @@ vector<vector<vector<vector<unsigned int>>>> Feind{
 
 //vector< vector< unsigned char> >FeindVectorPos(2,vector<unsigned char>(2,0));
 
-vector<vector<unsigned char>>FeindVectorPos(10,vector<unsigned char>(10,0));
-vector<vector<char>>FeindPorM(10,vector<char>(10,0));
+//25 bedeutet, dass 26 die Maximale Anzakl Feinde ist!!!
+vector<vector<unsigned char>>FeindVectorPos(25,vector<unsigned char>(25,0));
+vector<vector<char>>FeindPorM(25,vector<char>(25,0));
+vector<vector<char>>FeindXPos(25,vector<char>(25,0));
+vector<vector<char>>FeindYPos(25,vector<char>(25,0));
+vector<vector<char>>FeindXPosAlt(25,vector<char>(25,0));
+vector<vector<char>>FeindYPosAlt(25,vector<char>(25,0));
 
-vector<vector<char>>FeindXPos(10,vector<char>(10,0));
-vector<vector<char>>FeindYPos(10,vector<char>(10,0));
-vector<vector<char>>FeindXPosAlt(10,vector<char>(10,0));
-vector<vector<char>>FeindYPosAlt(10,vector<char>(10,0));
-
-int Leben=4;
+int Leben=5;
 int Geld=100;
 
-unsigned char Level = 0;
-unsigned char Schwirigkeitsgrad; //Achtung: klein ist hoch und gross einfach!
+unsigned short Level = 0;
+unsigned short Schwierigkeitsgrad; //Achtung: klein ist hoch und gross einfach!
 unsigned short Geschwindigkeit=50;  //Achtung: klein ist schnell und gross langsahm!
 
 unsigned char Spielfigur_x = 2;
@@ -147,7 +152,7 @@ void CursorVerschlucker()
     HANDLE  out;
 
     info.bVisible = 0;
-    info.dwSize   =   1;
+    info.dwSize   = 1;
 
     out = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleCursorInfo( out,  &info );
@@ -161,6 +166,8 @@ bool SpielfigurSetPos(unsigned char x, unsigned char y)
         if(x==FeindXPos[Level][i]&&y==FeindYPos[Level][i])
         {
             Leben--;
+
+            Geld=Geld/2;
 
             x=2;
             y=1;
@@ -196,7 +203,7 @@ bool SpielfigurSetPos(unsigned char x, unsigned char y)
         Geld=Geld+50;
         return true;
     }
-    else if(Spielfeld[Level][y].at(x)==3)
+    else if(Spielfeld[Level][y].at(x)==63)
     {
         Spielfeld[Level][Spielfigur_y_alt].at(Spielfigur_x_alt)=32;
         Spielfigur_x_alt = x;
@@ -220,7 +227,6 @@ bool SpielfigurSetPos(unsigned char x, unsigned char y)
 
 void Feindberechnung()
 {
-
 for(size_t i=0; i < Feind[Level].size(); i++)
 {
     if(FeindVectorPos[Level][i]==0)
@@ -246,15 +252,15 @@ for(size_t i=0; i < Feind[Level].size(); i++)
     Spielfeld[Level][FeindYPos[Level][i]].at(FeindXPos[Level][i])=1; //Herzzeile der Feindbewegung!!!
     FeindVectorPos[Level][i]=FeindVectorPos[Level][i]+FeindPorM[Level][i];
 }
-
+//Feind[Level].size()
 }
 
 void Statusanzeige()
 {
     system("cls");
 
-   HANDLE handle= GetStdHandle(STD_OUTPUT_HANDLE);
-   SetConsoleTextAttribute( handle, (BLACK + (WHITE * 16)) );
+    HANDLE handle= GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute( handle, (BLACK + (WHITE * 16)) );
 
     gotoXY(0,10);
 
@@ -286,46 +292,46 @@ int main(int argc, char *argv[])
 {
 unsigned int Feind_Neuberechnung=0;
 
-//Herzchensymbole
-Spielfeld[0][6].at(1)=char(3);
+setlocale (LC_CTYPE, "de_DE");
 
 
 //mciSendString("play P:\\8.mp3 repeat",0,0,0);
-
 mciSendString("open 8.mp3 alias MY_SND",0,0,0);
 mciSendString("play MY_SND repeat",0,0,0);
 //mciSendString("pause MY_SND",0,0,0);
 //mciSendString("resume MY_SND",0,0,0);
 //mciSendString("stop MY_SND",0,0,0);
 
-//while(GetAsyncKeyState(VK_ESCAPE)==true)
-//{
+while(GetAsyncKeyState(VK_ESCAPE)==false) {
 
 system("color 1F");
 
 cout << " Herzlich Willkommen zum Spiel GTTE 2013\n\n";
-cout << " Das Ziel des Spiels ist es durch steuern\n deiner Spielfigur ins Freie zu gelangen.\n\n";
-cout << " Auf deinem Weg musst du jedoch allen\n Wächter ausweichen, die dich sonst\n wieder an deine Startposition bringen.\n\n";
-cout << " Du kannst deine Spielfigur mit ASDW, mit\n den Pfeiltasten sowie mit dem Num-Block\n (auch diagonal möglich) steuern.\n\n";
-cout << " Noch viel Spass beim Spielen wünscht dir\n Nico Bosshard\n\n\n";
+cout << " Das Ziel des Spiels ist es, durch Steuern\n deiner Spielfigur ins Freie zu gelangen.\n\n";
+cout << " Auf deinem Weg musst du jedoch allen\n Wächtern ausweichen, die dich sonst\n wieder an deine Startposition bringen.\n\n";
+cout << " Sie können ihre Spielfigur mit ASDW, mit\n den Pfeiltasten sowie mit dem Num-Block\n (auch diagonal möglich) steuern.\n\n";
+cout << " Noch viel Spass beim Spielen wünscht ihnen\n Nico Bosshard\n\n\n";
 cout << " ";
 system("Pause");
 system("Cls");
 
 int Level_Eingabe;
-int Schwirigkeitsgrad_Eingabe;
+int Schwierigkeitsgrad_Eingabe;
 
-cout << "Wähle eine beliebiges Level sowie eine dir Angemessene Geschwindigkeit der Wächter aus um mit dem Spiel zu beginnen.\n\n";
 
 while(true){
-cout << "Level (1-3): ";
+
+cout << endl;
+cout << " Wählen Sie einen Level sowie eine\n beliebige Geschwindigkeit der Wächter\n aus um mit dem Spiel zu beginnen.\n\n";
+
+cout << " Level (1-3): ";
 cin >> Level_Eingabe;
 cout << endl << endl;
-cout << "Geschwindigkeit (1-20): ";
-cin >> Schwirigkeitsgrad_Eingabe;
+cout << " Geschwindigkeit (1-20): ";
+cin >> Schwierigkeitsgrad_Eingabe;
 
 system("Cls");
-if(Level_Eingabe>0 && Level_Eingabe<4 && Schwirigkeitsgrad_Eingabe>0 && Schwirigkeitsgrad_Eingabe<21)
+if(Level_Eingabe>0 && Level_Eingabe<4 && Schwierigkeitsgrad_Eingabe>0 && Schwierigkeitsgrad_Eingabe<21)
 {
     break;
 }
@@ -339,14 +345,15 @@ int Map_Zeilen;
 int Map_Buchstaben;
 
 Level=Level_Eingabe-1;
-Schwirigkeitsgrad_Eingabe=21-Schwirigkeitsgrad_Eingabe;
+Schwierigkeitsgrad_Eingabe=21-Schwierigkeitsgrad_Eingabe;
 
-Schwirigkeitsgrad=Schwirigkeitsgrad_Eingabe;
-//Schwirigkeitsgrad=100-Schwirigkeitsgrad;
+Schwierigkeitsgrad=Schwierigkeitsgrad_Eingabe;
 
-Feind_Neuberechnung=Schwirigkeitsgrad-1;
+Feind_Neuberechnung=Schwierigkeitsgrad-1;
+
 
 Statusanzeige();
+
 
 while(true)
 {
@@ -360,6 +367,55 @@ while(true)
     //    cout << Spielfeld[Level][i];
     //}
 
+    if(Spielfigur_x==42 || Spielfigur_y==2)
+        {
+            Spielfeld[Level][Spielfigur_y].at(Spielfigur_x)=32;
+            Leben=5;
+            Geld=100;
+            Spielfigur_x=2;
+            Spielfigur_y=1;
+
+            system("color E0");
+            system("Cls");
+
+            cout << endl;
+            cout << endl;
+            cout << "           @@@@@   @@    @  @@@@   \n";
+            cout << "           @       @ @   @  @   @  \n";
+            cout << "           @@@@@   @  @  @  @   @  \n";
+            cout << "           @       @   @ @  @   @  \n";
+            cout << "           @@@@@   @    @@  @@@@   \n";
+            cout << endl;
+            cout << endl;
+            cout << " Herzliche Gratulation: Sie habe Level " << Level << "\n erfolgreich mit der Schwiergigkeitsstufe\n "
+                 << Schwierigkeitsgrad_Eingabe <<" und " << Geld << "$ abgeschlossen.";
+            cout << endl;
+            cout << endl;
+            cout << endl;
+            cout << endl;
+            cout << " ";
+
+            system("Pause");
+            break;
+        }
+
+    if(SpielfigurSetPos(Spielfigur_x, Spielfigur_y)==true)
+    {
+
+        if(Leben==0)
+        {
+            Spielfigur_x=2;
+            Spielfigur_y=1;
+            Leben=5;
+            Geld=100;
+            break;
+        }
+
+        Statusanzeige();
+        gotoXY(0,0);
+    }
+
+
     for(Map_Zeilen=0; Map_Zeilen < 9; Map_Zeilen++)
     {
         for(Map_Buchstaben=0; Map_Buchstaben < 43; Map_Buchstaben++)
@@ -372,7 +428,7 @@ while(true)
                 case 2 :
                     coutc(BLUE, WHITE, char(2));
                     break;
-                case 3 :
+                case 63 :
                     coutc(LIGHTRED,WHITE, char(3));
                     break;
                 case 36 :
@@ -391,14 +447,8 @@ while(true)
 
 
 
-
-    if(SpielfigurSetPos(Spielfigur_x, Spielfigur_y)==true)
-    {
-        Statusanzeige();
-    }
-
     Feind_Neuberechnung++;
-    if(Feind_Neuberechnung==Schwirigkeitsgrad)
+    if(Feind_Neuberechnung==Schwierigkeitsgrad)
     {
         Feindberechnung();
         Feind_Neuberechnung=0;
@@ -460,7 +510,7 @@ system("color 0F");
 system("Cls");
 
 
-//};
+};
 
 
 }

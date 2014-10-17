@@ -7,3 +7,11 @@
 	<vfw.h>
 	"mmsystem.h"
 
+1380747581 source:c:\users\nico\desktop\projektwoche mi abend\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	"mmsystem.h"
+	<locale.h>
+
