@@ -39,27 +39,27 @@ using namespace std;
 
 string Spielfeld[3][10] {
     {
-        {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"},
-        {"X  X   X$X         XXX            XX     XX\n"},
-        {"X XX X X XX    XX XXXX XXX       XXX XXX XX\n"},
+        {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"},
+        {"X  X   X$X         XXX            XX     X \n"},
+        {"X XX X X XX    XX XXXX XXX   X   XXX XXX X \n"},
         {"X      X       X        XXX     XX     X XX\n"},
-        {"XXXXXX X XX    XX XXXXXXXXXX   XXX  X  X   \n"},
-        {"X    X   X         XXXXXXXXX   XXX     X XX\n"},
-        {"X?XX   XX$XXXXXXXXXXXXXXXXXXX XXXXXX XXX ?X\n"},
-        {"X    XXX                              XX XX\n"},
-        {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"}
+        {"XXXXXX X XX    XX XXXXXXX$XX   XXX  X  X   \n"},
+        {"X    X   X         X       X   XXX     X XX\n"},
+        {"X?XX   XXXXXXXXXXXXX XXXXX XX XXXXXX XXX ? \n"},
+        {"X    XXX$$                            XX X \n"},
+        {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"}
     },
 
     {
-        {"XXXXXXAXXX\n"},
-        {"X  X   X X\n"},
-        {"X XX X X X\n"},
-        {"X      X  \n"},
-        {"XXXXX  X X\n"},
-        {"XXXX     X\n"},
-        {"XXXXXXXXXX\n"},
-        {"XXXXXXXXXX\n"},
-        {"XXXXXXXXXX\n"}
+        {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"},
+        {"X  X   X$X         XXX     r      XX     X \n"},
+        {"X XX X X XX    XX XXXX XXX       XXX XXX X \n"},
+        {"X      X       X        XXX     XX     X XX\n"},
+        {"XXXXXX X XX    XX XXXXXXX$XX   XXX  X  X   \n"},
+        {"X    X   X         X       X   XXX     X XX\n"},
+        {"X?XX   XXXXXXXXXXXXX XXXXX XX XXXXXX XXX ? \n"},
+        {"X    XXX$$                            XX X \n"},
+        {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"}
     }
 };
 
@@ -78,8 +78,9 @@ vector<vector<vector<vector<unsigned int>>>> Feind{
     {{10, 1},{11, 1},{12, 1},{13, 1},{14, 1},{15, 1},{16, 1},{17, 1},{18, 1}},
     {{10, 5},{11, 5},{12, 5},{13, 5},{14, 5},{15, 5},{16, 5},{17, 5},{18, 5}},
     {{16, 3},{17, 3},{18, 3},{19, 3},{20, 3},{21, 3},{22, 3},{23, 3}},
-    {{8, 7},{9, 7},{10, 7},{11, 7},{12, 7},{13, 7},{14, 7},{15, 7},{16, 7},{17, 7},{18, 7},{19, 7},{20, 7},{21, 7},{22, 7},
-    {23, 7},{24, 7},{25, 7},{26, 7},{27, 7},{28, 7},{29, 7},{30, 7},{31, 7},{32, 7},{33, 7},{34, 7},{35, 7},{36, 7},{37, 7}},
+    {{10, 7},{11, 7},{12, 7},{13, 7},{14, 7},{15, 7},{16, 7},{17, 7},{18, 7},{19, 7},{20, 7},{21, 7},{22, 7},
+    {23, 7},{24, 7},{25, 7},{26, 7},{27, 7},{28, 7},{29, 7},{30, 7},{31, 7},{32, 7},{33, 7},{34, 7},{35, 7},{36, 7},{37, 7},{38, 7}},
+    {{29, 2},{29, 3},{29, 4},{29, 5},{29, 6},{29, 7}},
 },
 {
     {{0, 0}, {0, 0}, {0, 0},{0, 0}},
@@ -106,12 +107,11 @@ vector<vector<char>>FeindYPos(10,vector<char>(10,0));
 vector<vector<char>>FeindXPosAlt(10,vector<char>(10,0));
 vector<vector<char>>FeindYPosAlt(10,vector<char>(10,0));
 
-
 int Leben=4;
 int Geld=100;
 
 unsigned char Level = 0;
-unsigned char Schwirigkeitsgrad=15; //Achtung: klein ist hoch und gross schwierig!
+unsigned char Schwirigkeitsgrad; //Achtung: klein ist hoch und gross einfach!
 unsigned short Geschwindigkeit=50;  //Achtung: klein ist schnell und gross langsahm!
 
 unsigned char Spielfigur_x = 2;
@@ -253,25 +253,30 @@ void Statusanzeige()
 {
     system("cls");
 
-    for(size_t i=0; i < 10; i++)
-    {
-        cout << Spielfeld[Level][i];
-    }
+   HANDLE handle= GetStdHandle(STD_OUTPUT_HANDLE);
+   SetConsoleTextAttribute( handle, (BLACK + (WHITE * 16)) );
 
-    cout << endl;
+    gotoXY(0,10);
+
     cout << "Leben: ";
     // Herze Rot ferben
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-    FOREGROUND_INTENSITY | FOREGROUND_RED | BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+    //HANDLE handle= GetStdHandle(STD_OUTPUT_HANDLE);
+   //SetConsoleTextAttribute( handle, (fcolor + (bcolor * 16)) );
+
+    SetConsoleTextAttribute( handle, (LIGHTRED + (WHITE * 16)) );
+
     for(size_t i=0; i < Leben; i++)
     {
         cout << char(3);
     }
-    // Farbe wieder zurücksetzen
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-    //FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-    FOREGROUND_INTENSITY | FOREGROUND_GREEN | BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
-    cout << endl << "Geld: " << Geld;
+
+    cout << endl;
+
+    SetConsoleTextAttribute( handle, (BLACK + (WHITE * 16)));
+    cout << ("Geld: ");
+
+    SetConsoleTextAttribute( handle, (LIGHTCYAN + (WHITE * 16)));
+    cout << (Geld);
 
 }
 
@@ -289,43 +294,59 @@ Spielfeld[0][6].at(1)=char(3);
 
 mciSendString("open 8.mp3 alias MY_SND",0,0,0);
 mciSendString("play MY_SND repeat",0,0,0);
-
-// etc
-
 //mciSendString("pause MY_SND",0,0,0);
-
-// etc
-
 //mciSendString("resume MY_SND",0,0,0);
-
-// etc
-
 //mciSendString("stop MY_SND",0,0,0);
 
-// etc
+//while(GetAsyncKeyState(VK_ESCAPE)==true)
+//{
 
+system("color 1F");
 
+cout << " Herzlich Willkommen zum Spiel GTTE 2013\n\n";
+cout << " Das Ziel des Spiels ist es durch steuern\n deiner Spielfigur ins Freie zu gelangen.\n\n";
+cout << " Auf deinem Weg musst du jedoch allen\n Wächter ausweichen, die dich sonst\n wieder an deine Startposition bringen.\n\n";
+cout << " Du kannst deine Spielfigur mit ASDW, mit\n den Pfeiltasten sowie mit dem Num-Block\n (auch diagonal möglich) steuern.\n\n";
+cout << " Noch viel Spass beim Spielen wünscht dir\n Nico Bosshard\n\n\n";
+cout << " ";
+system("Pause");
+system("Cls");
 
-// FOREGROUND_YELLOW + FOREGROUND_INTENSITY
-//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-//FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
-//SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE),CONSOLE_FULLSCREEN_MODE,0);
+int Level_Eingabe;
+int Schwirigkeitsgrad_Eingabe;
+
+cout << "Wähle eine beliebiges Level sowie eine dir Angemessene Geschwindigkeit der Wächter aus um mit dem Spiel zu beginnen.\n\n";
+
+while(true){
+cout << "Level (1-3): ";
+cin >> Level_Eingabe;
+cout << endl << endl;
+cout << "Geschwindigkeit (1-20): ";
+cin >> Schwirigkeitsgrad_Eingabe;
+
+system("Cls");
+if(Level_Eingabe>0 && Level_Eingabe<4 && Schwirigkeitsgrad_Eingabe>0 && Schwirigkeitsgrad_Eingabe<21)
+{
+    break;
+}
+}
 
 system("color F0");
+system("Cls");
 
-// FOREGROUND_YELLOW + FOREGROUND_INTENSITY + BACKGROUND_RED + BACKGROUND_INTENSITY
-//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),enum Colors { blau=1, gruen, cyan, rot, violett, gelb, grau, dunkelgrau, hellblau, hellgrün, hellrot, hellviolett, hellgelb, weiss };
-//FOREGROUND_INTENSITY ::SendMessage(::GetConsoleWindow(), WM_SYSKEYDOWN, VK_RETURN, 0x20000000);| FOREGROUND_RED | FOREGROUND_GREEN | BACKGROUND_INTENSITY | BACKGROUND_RED);
-
-//WinExec(HHH.c_str(),0);
-//ShellExecute(NULL, "open", "P:\\Programme\\mpg123\\mpg123.exe", "P:\\Programme\\mpg123\\mpg123\\8-bit.mp3", NULL, SW_SHOWNORMAL);
-//system("vlc P:\\Programme\\mpg123\\mpg123.exe --no-gapless P:\\Programme\\mpg123\\8-bit.mp3");
-//system("pause");
 
 int Map_Zeilen;
 int Map_Buchstaben;
 
+Level=Level_Eingabe-1;
+Schwirigkeitsgrad_Eingabe=21-Schwirigkeitsgrad_Eingabe;
+
+Schwirigkeitsgrad=Schwirigkeitsgrad_Eingabe;
+//Schwirigkeitsgrad=100-Schwirigkeitsgrad;
+
 Feind_Neuberechnung=Schwirigkeitsgrad-1;
+
+Statusanzeige();
 
 while(true)
 {
@@ -357,7 +378,7 @@ while(true)
                 case 36 :
                     coutc(LIGHTCYAN,WHITE, char(36));
                     break;
-                default : coutc(0,15,Spielfeld[Level][Map_Zeilen].at(Map_Buchstaben));
+                default : coutc(BLACK,WHITE,Spielfeld[Level][Map_Zeilen].at(Map_Buchstaben));
             }
 
             //cout << Spielfeld[Level][Map_Zeilen];
@@ -433,10 +454,13 @@ while(true)
     }
 
 
-
-
 }
 
+system("color 0F");
+system("Cls");
+
+
+//};
 
 
 }

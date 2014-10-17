@@ -1,39 +1,5 @@
 # depslib dependency file v1.0
-1380547877 source:p:\configuration\desktop\projektwoche\main.cpp
-	<iostream>
-	<windows.h>
-	<vector>
-	<string>
-
-1380570201 source:c:\users\nico\desktop\projektwoche mo 14.58\main.cpp
-	<iostream>
-	<windows.h>
-	<vector>
-	<string>
-
-1380620225 source:p:\configuration\desktop\projektwoche mo 22.47\main.cpp
-	<iostream>
-	<windows.h>
-	<vector>
-	<string>
-
-1380643900 source:p:\configuration\desktop\projektwoche di\main.cpp
-	<iostream>
-	<windows.h>
-	<vector>
-	<string>
-	<vfw.h>
-	"mmsystem.h"
-
-1380656854 source:c:\users\nico\desktop\projektwoche di\main.cpp
-	<iostream>
-	<windows.h>
-	<vector>
-	<string>
-	<vfw.h>
-	"mmsystem.h"
-
-1380706853 source:p:\configuration\desktop\projektwoche\projektwoche mi mi\main.cpp
+1380721669 source:p:\configuration\desktop\projektwoche\projektwoche mi mi\main.cpp
 	<iostream>
 	<windows.h>
 	<vector>
