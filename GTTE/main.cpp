@@ -463,8 +463,8 @@ while(true)
             cout << "        @@@@    @@@@@  @    @   @@@@  \n";
             cout << endl;
             cout << endl;
-            cout << " Sie haben das Level leider nicht gesschafft. Versuchen Sie es später nochmals.\n "
-                 << "Tipp: Versuchen Sie immer Orte zu finden, wo nie nie ein Wächter hindurchläuft.";
+            cout << " Sie haben das Level leider nicht\n gesschafft! Versuchen Sie es später\n nochmals.\n\n"
+                 << " Tipp: Versuchen Sie immer Orte zu finden,\n wo nie nie ein Wächter hindurchläuft.";
             cout << endl;
             cout << endl;
             cout << endl;

@@ -42,3 +42,12 @@
 	<locale.h>
 	<locale>
 
+1380866145 source:p:\configuration\desktop\gtte - ein  c++ programm programmieren von nico bosshard\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	"mmsystem.h"
+	<locale.h>
+	<locale>
+
