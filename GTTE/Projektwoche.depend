@@ -1,5 +1,11 @@
 # depslib dependency file v1.0
-1380541826 source:p:\configuration\desktop\projektwoche\main.cpp
+1380547877 source:p:\configuration\desktop\projektwoche\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+
+1380570201 source:c:\users\nico\desktop\projektwoche mo 14.58\main.cpp
 	<iostream>
 	<windows.h>
 	<vector>
