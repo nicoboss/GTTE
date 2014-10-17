@@ -4,14 +4,7 @@
 #include <string>       //neue Strings
 #include "mmsystem.h"   //Soundencoder
 #include <locale.h>     //Deeeutsches Sprachpacket für Umlaute
-
-
-
-
-
-
-
-
+#include <locale> //Sprachbibliothek
 
 
 #define BLACK 0
@@ -57,13 +50,13 @@ string Spielfeld[3][11] {
 
     {
         {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"},
-        {"X  X   X$X         XXX            XX     X \n"},
-        {"X XX X X XX    XX XXXX XXX       XXX XXX X \n"},
-        {"X      X       X        XXX     XX     X XX\n"},
-        {"XXXXXX X XX    XX XXXXXXX$XX   XXX  X  X   \n"},
-        {"X    X   X         X       X   XXX    XX XX\n"},
-        {"X?XX   XXXXXXXXXXXXX XXXXX XX XXXXXX XX? X \n"},
-        {"X    XXX$$                            XX X \n"},
+        {"X  XXXX         XXXX            XXX$XXXXXX \n"},
+        {"X XX               X$XXXXX XXX XX     XXXX \n"},
+        {"X    XX         XX XXX$     X?X XXX XX XXXX\n"},
+        {"XXXXXXXXXXXXXXXXX       XXXXX        XX    \n"},
+        {"XXX$           $XX XXX$     X?X XXX XX XXXX\n"},
+        {"X?   x   x   X     X$XXXXX XXX XX     XXXX \n"},
+        {"XXX$           $XXXX            XXX$XXXXXX \n"},
         {"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n"}
     }
 };
@@ -92,11 +85,26 @@ vector<vector<vector<vector<unsigned int>>>> Feind{
     {{40, 5},{40, 6},{40, 7}},
 },
 {
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-
+    {{7, 1},{7, 2},{7, 3}},
+    {{8, 3},{8, 2},{8, 1}},
+    {{9, 1},{9, 2},{9, 3}},
+    {{10, 3},{10, 2},{10, 1}},
+    {{11, 1},{11, 2},{11, 3}},
+    {{12, 3},{12, 2},{12, 1}},
+    {{13, 1},{13, 2},{13, 3}},
+    {{14, 3},{14, 2},{14, 1}},
+    {{15, 1},{15, 2},{15, 3}},
+    {{5, 5}, {6, 5},{6, 6},{6, 7},{5, 7},{4, 7},{4, 6},{4, 5},{5, 5}},
+    {{9, 7},{8, 7},{8, 6},{8, 5},{9, 5}, {10, 5},{10, 6},{10, 7},{9, 7}},
+    {{13, 5}, {14, 5},{14, 6},{14, 7},{13, 7},{12, 7},{12, 6},{12, 5},{13, 5}},
+    {{17, 4},{18, 4},{19, 4},{20, 4},{21, 4},{22, 4},{23, 4}},
+    {{27, 3},{26, 3},{25, 3},{24, 3},{23, 3}},
+    {{23, 5},{24, 5},{25, 5},{26, 5},{27, 5}},
+    {{19, 1},{20, 1},{21, 1},{22, 1},{23, 1},{24, 1},{25, 1},{26, 1},{27, 1},{28, 1},{29, 1},{30, 1},{31, 1}},
+    {{31, 7},{30, 7},{29, 7},{28, 7},{27, 7},{26, 7},{25, 7},{24, 7},{23, 7},{22, 7},{21, 7},{20, 7},{19, 7}},
+    {{36, 4},{35, 4},{34, 4},{33, 4},{32, 4},{31, 4},{30, 4},{29, 4}},
+    {{33, 2},{34, 2},{35, 2},{36, 2},{37, 2},{38, 2},{39, 2}},
+    {{39, 6},{38, 6},{37, 6},{36, 6},{35, 6},{34, 6},{32, 6}},
 }
 };
 
@@ -288,11 +296,11 @@ void Statusanzeige()
 
 
 
-int main(int argc, char *argv[])
+int main()
 {
 unsigned int Feind_Neuberechnung=0;
 
-setlocale (LC_CTYPE, "de_DE");
+setlocale ( LC_ALL, "German" );
 
 
 //mciSendString("play P:\\8.mp3 repeat",0,0,0);
@@ -324,10 +332,10 @@ while(true){
 cout << endl;
 cout << " Wählen Sie einen Level sowie eine\n beliebige Geschwindigkeit der Wächter\n aus um mit dem Spiel zu beginnen.\n\n";
 
-cout << " Level (1-3): ";
+cout << " Level 1 (leicht) bis 3 (schwer): ";
 cin >> Level_Eingabe;
 cout << endl << endl;
-cout << " Geschwindigkeit (1-20): ";
+cout << " Tempo 1 (langsam) bis 20 (schnell): ";
 cin >> Schwierigkeitsgrad_Eingabe;
 
 system("Cls");
@@ -367,24 +375,20 @@ while(true)
     //    cout << Spielfeld[Level][i];
     //}
 
-    if(Spielfigur_x==42 || Spielfigur_y==2)
+    if(Spielfigur_x==42 && Spielfigur_y==4)
         {
             Spielfeld[Level][Spielfigur_y].at(Spielfigur_x)=32;
-            Leben=5;
-            Geld=100;
-            Spielfigur_x=2;
-            Spielfigur_y=1;
 
             system("color E0");
             system("Cls");
 
             cout << endl;
             cout << endl;
-            cout << "           @@@@@   @@    @  @@@@   \n";
-            cout << "           @       @ @   @  @   @  \n";
-            cout << "           @@@@@   @  @  @  @   @  \n";
-            cout << "           @       @   @ @  @   @  \n";
-            cout << "           @@@@@   @    @@  @@@@   \n";
+            cout << "           @@@@@   @@    @  @@@@  \n";
+            cout << "           @       @ @   @  @   @ \n";
+            cout << "           @@@@@   @  @  @  @   @ \n";
+            cout << "           @       @   @ @  @   @ \n";
+            cout << "           @@@@@   @    @@  @@@@  \n";
             cout << endl;
             cout << endl;
             cout << " Herzliche Gratulation: Sie habe Level " << Level << "\n erfolgreich mit der Schwiergigkeitsstufe\n "
@@ -394,8 +398,13 @@ while(true)
             cout << endl;
             cout << endl;
             cout << " ";
-
             system("Pause");
+
+            Leben=5;
+            Geld=100;
+            Spielfigur_x=2;
+            Spielfigur_y=1;
+
             break;
         }
 
@@ -408,6 +417,27 @@ while(true)
             Spielfigur_y=1;
             Leben=5;
             Geld=100;
+            system("color C0");
+            system("Cls");
+
+            cout << endl;
+            cout << endl;
+            cout << "        @@@@    @@@@@     @     @@@@  \n";
+            cout << "        @   @   @       @  @    @   @ \n";
+            cout << "        @   @   @@@@@  @@@@@@   @   @ \n";
+            cout << "        @   @   @      @    @   @   @ \n";
+            cout << "        @@@@    @@@@@  @    @   @@@@  \n";
+            cout << endl;
+            cout << endl;
+            cout << " Sie haben das Level leider nicht gesschafft. Versuchen Sie es später nochmals.\n "
+                 << "Tipp: Versuchen Sie immer Orte zu finden, wo nie nie ein Wächter hindurchläuft.";
+            cout << endl;
+            cout << endl;
+            cout << endl;
+            cout << endl;
+            cout << " ";
+
+            system("Pause");
             break;
         }
 

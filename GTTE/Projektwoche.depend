@@ -15,3 +15,12 @@
 	"mmsystem.h"
 	<locale.h>
 
+1380792591 source:p:\configuration\desktop\projektwoche do mo\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	"mmsystem.h"
+	<locale.h>
+	<locale>
+
