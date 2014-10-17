@@ -2,21 +2,29 @@
 #include <windows.h>
 #include <vector>
 #include <string>
+#include <vfw.h>
+#include "mmsystem.h"
+
+#pragma comment( lib, "vfw32.lib" )                 // Search For VFW32.lib While Linking
+//#include <P:\winmm.h>
+
 
 using namespace std;
 
-//vector<string> Spielfeld;
+
+//vector<string> Spielfeld;using namespace std;
+
 
 string Spielfeld[3][10] {
     {
         {"XXXXXXXXXXXXXXXXXXXXXXXX\n"},
-        {"X  X   X X\n"},
-        {"X XX X X X\n"},
-        {"X      X  \n"},
-        {"XXXX   X X\n"},
-        {"XXXX     X\n"},
-        {"XXXXXXXXXXXXXXXXXXXXXXXX\n"},
-        {"XXXXXXXXXXXXXXXXXXXXX\n"},
+        {"X  X   X$X         X\n"},
+        {"X XX X X XX    XX XX\n"},
+        {"X      X       X        X\n"},
+        {"XXXXXX X XX    XX XX\n"},
+        {"X    X   X         X\n"},
+        {"X?XX   XXXXXXXXXXXXXXXX\n"},
+        {"X    XXXXXXXXXXXXXXXXX\n"},
         {"XXXXXXXXXXXXXXXXXXXXX\n"}
     },
 
@@ -25,7 +33,7 @@ string Spielfeld[3][10] {
         {"X  X   X X\n"},
         {"X XX X X X\n"},
         {"X      X  \n"},
-        {"XXXX   X X\n"},
+        {"XXXXX  X X\n"},
         {"XXXX     X\n"},
         {"XXXXXXXXXX\n"},
         {"XXXXXXXXXX\n"},
@@ -40,14 +48,14 @@ string Spielfeld[3][10] {
 
 vector<vector<vector<vector<unsigned int>>>> Feind{
 {
-    {{6, 1}, {6, 3}, {6, 2},{6, 4}, {6, 5}, {5, 5}, {6, 5}},
-    {{1, 3}, {2, 3}, {3, 3},{4, 3}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
-    {{0, 0}, {0, 0}, {0, 0},{0, 0}},
+    {{6, 3}, {5, 3}, {4, 3},{3, 3},{2, 3},{1, 3}},
+    {{6, 1}, {6, 2}, {6, 3},{6, 4}, {6, 5}, {6, 6}},
+    {{1, 5},{2, 5}, {3, 5},{4, 5}, {4, 6}, {4, 7}, {3, 7},{2, 7},{1, 7}},
+    {{8, 3}, {9, 3}, {10, 3},{11, 3},{12, 3},{13, 3},{14, 3}},
+    {{12, 1}, {12, 2}, {12, 3},{12, 4},{12, 5}},
+    {{10, 1}, {11, 1}, {12, 1},{13, 1},{14, 1},{15, 1},{16, 1},{17, 1},{18, 1}},
+    {{10, 5}, {11, 5}, {12, 5},{13, 5},{14, 5},{15, 5},{16, 5},{17, 5},{18, 5}},
+    //{{0, 0}, {0, 0}, {0, 0},{0, 0}},
 },
 {
     {{0, 0}, {0, 0}, {0, 0},{0, 0}},
@@ -75,6 +83,9 @@ vector<vector<char>>FeindXPosAlt(10,vector<char>(10,0));
 vector<vector<char>>FeindYPosAlt(10,vector<char>(10,0));
 
 
+int Leben=4;
+int Geld=100;
+
 unsigned char Level = 0;
 unsigned char Schwirigkeitsgrad=15; //Achtung: klein ist hoch und gross schwierig!
 unsigned short Geschwindigkeit=50;  //Achtung: klein ist schnell und gross langsahm!
@@ -88,6 +99,7 @@ unsigned char Spielfigur_y_alt = 1;
 int i;
 
 
+
 void gotoXY(int x, int y) {
 	HANDLE hStdout;
 	COORD coordScreen = { 0, 0 };
@@ -96,7 +108,6 @@ void gotoXY(int x, int y) {
 	coordScreen.Y = y;
 	SetConsoleCursorPosition( hStdout, coordScreen );
 }
-
 
 void CursorVerschlucker()
 {
@@ -111,8 +122,30 @@ void CursorVerschlucker()
 }
 
 
-void SpielfigurSetPos(unsigned char x, unsigned char y)
+bool SpielfigurSetPos(unsigned char x, unsigned char y)
 {
+    for(size_t i=0; i < FeindXPos[Level].size(); i++)
+    {
+        if(x==FeindXPos[Level][i]&&y==FeindYPos[Level][i])
+        {
+            Leben--;
+
+            x=2;
+            y=1;
+            Spielfigur_x=x;
+            Spielfigur_y=y;
+
+            Spielfeld[Level][Spielfigur_y_alt].at(Spielfigur_x_alt)=32;
+            Spielfigur_x_alt = x;
+            Spielfigur_y_alt = y;
+            Spielfeld[Level][y].at(x)=2;
+            cout << "\a";
+
+            return true;
+
+        }
+    }
+
     if(Spielfeld[Level][y].at(x)==32)
     {
         Spielfeld[Level][Spielfigur_y_alt].at(Spielfigur_x_alt)=32;
@@ -121,39 +154,44 @@ void SpielfigurSetPos(unsigned char x, unsigned char y)
 
         Spielfeld[Level][y].at(x)=2;
     }
+    else if(Spielfeld[Level][y].at(x)==36)
+    {
+        Spielfeld[Level][Spielfigur_y_alt].at(Spielfigur_x_alt)=32;
+        Spielfigur_x_alt = x;
+        Spielfigur_y_alt = y;
+
+        Spielfeld[Level][y].at(x)=2;
+
+        Geld=Geld+50;
+        return true;
+    }
+    else if(Spielfeld[Level][y].at(x)==3)
+    {
+        Spielfeld[Level][Spielfigur_y_alt].at(Spielfigur_x_alt)=32;
+        Spielfigur_x_alt = x;
+        Spielfigur_y_alt = y;
+
+        Spielfeld[Level][y].at(x)=2;
+
+        Leben++;
+        return true;
+    }
     else
     {
         Spielfigur_x=Spielfigur_x_alt;
         Spielfigur_y=Spielfigur_y_alt;
     }
+
+    return false;
 }
+
 
 
 void Feindberechnung()
 {
-    //for(i=0; i < 10; i++)
-    //{
-        //Feind[Level][i][FeindPos[i]]
-    //}
-        //if(Spielfeld[Level][3].at(3)==32)
-        //{
-            //Spielfeld[Level][Spielfigur_y_alt].at(Spielfigur_x_alt)=32;
-            //Spielfigur_x_alt = x;
-            //Spielfigur_y_alt = y;
-
-            //Spielfeld[Level][y].at(x)=40;
-        //}
-        //else
-        //{
-            //Spielfigur_x=Spielfigur_x_alt;
-            //Spielfigur_y=Spielfigur_y_alt;
-        //}
-    //}
-
 
 for(size_t i=0; i < Feind[Level].size(); i++)
 {
-
     if(FeindVectorPos[Level][i]==0)
     {
         FeindPorM[Level][i]=1;
@@ -175,30 +213,68 @@ for(size_t i=0; i < Feind[Level].size(); i++)
     FeindVectorPos[Level][i]=FeindVectorPos[Level][i]+FeindPorM[Level][i];
 }
 
-cout << "\a";
+}
 
+void Statusanzeige()
+{
+    system("cls");
 
-//FeindVectorPos;
-//FeindPorM;
+    for(size_t i=0; i < 10; i++)
+    {
+        cout << Spielfeld[Level][i];
+    }
 
-//cout << Feind[Level].size();
-//cout << endl << endl;
-
-
-    //cout << Feind[Level][i][1][0];
-    //cout << Feind[Level][i][1][1];
+    cout << endl;
+    cout << "Leben: ";
+    for(size_t i=0; i < Leben; i++)
+    {
+        cout << char(3);
+    }
+    cout << endl << "Geld: " << Geld;
 
 }
 
+//HWND m_Video = MCIWndCreate(NULL,NULL,WS_BORDER,"P:\\Programme\\mpg123\\8-bit.mp3");
 
-int main()
+
+
+
+int main(int argc, char *argv[])
 {
 unsigned int Feind_Neuberechnung=0;
 
-CursorVerschlucker();
+//Herzchensymbole
+Spielfeld[0][6].at(1)=char(3);
 
-//char SSS=2;
-//cout << SSS;
+
+//mciSendString("play P:\\8.mp3 repeat",0,0,0);
+
+mciSendString("open P:\\8.mp3 alias MY_SND",0,0,0);
+mciSendString("play MY_SND",0,0,0);
+
+// etc
+
+//mciSendString("pause MY_SND",0,0,0);
+
+// etc
+
+//mciSendString("resume MY_SND",0,0,0);
+
+// etc
+
+//mciSendString("stop MY_SND",0,0,0);
+
+// etc
+
+
+
+system("color F0");
+Statusanzeige();
+
+
+//WinExec(HHH.c_str(),0);
+//ShellExecute(NULL, "open", "P:\\Programme\\mpg123\\mpg123.exe", "P:\\Programme\\mpg123\\mpg123\\8-bit.mp3", NULL, SW_SHOWNORMAL);
+//system("vlc P:\\Programme\\mpg123\\mpg123.exe --no-gapless P:\\Programme\\mpg123\\8-bit.mp3");
 //system("pause");
 
 while(true)
@@ -212,7 +288,12 @@ while(true)
         cout << Spielfeld[Level][i];
     }
 
-    SpielfigurSetPos(Spielfigur_x, Spielfigur_y);
+
+
+    if(SpielfigurSetPos(Spielfigur_x, Spielfigur_y)==true)
+    {
+        Statusanzeige();
+    }
 
     Feind_Neuberechnung++;
     if(Feind_Neuberechnung==Schwirigkeitsgrad)
@@ -230,7 +311,7 @@ while(true)
     }
     else if(GetAsyncKeyState(VK_RIGHT)&1||GetAsyncKeyState(VK_NUMPAD6)&1||GetAsyncKeyState(0x44)&1 == true)
     {
-        //cout << "Rechts\n\a";
+        //cout << "Rechts\strncpyn\a";        return false;
         Spielfigur_x++;
     }
     else if(GetAsyncKeyState(VK_UP)&1||GetAsyncKeyState(VK_NUMPAD8)&1||GetAsyncKeyState(0x57)&1 == true)

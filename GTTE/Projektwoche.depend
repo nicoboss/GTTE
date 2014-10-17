@@ -11,3 +11,17 @@
 	<vector>
 	<string>
 
+1380620225 source:p:\configuration\desktop\projektwoche mo 22.47\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+
+1380643900 source:p:\configuration\desktop\projektwoche di\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<vfw.h>
+	"mmsystem.h"
+
