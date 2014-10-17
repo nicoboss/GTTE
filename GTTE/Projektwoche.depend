@@ -33,3 +33,11 @@
 	<vfw.h>
 	"mmsystem.h"
 
+1380697224 source:p:\configuration\desktop\projektwoche\projektwoche mi mi\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<vfw.h>
+	"mmsystem.h"
+

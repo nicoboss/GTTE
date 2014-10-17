@@ -250,14 +250,15 @@ void Statusanzeige()
     cout << "Leben: ";
     // Herze Rot ferben
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-    FOREGROUND_INTENSITY | FOREGROUND_RED);
+    FOREGROUND_INTENSITY | FOREGROUND_RED | BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
     for(size_t i=0; i < Leben; i++)
     {
         cout << char(3);
     }
     // Farbe wieder zurücksetzen
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-    FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+    //FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+    FOREGROUND_INTENSITY | FOREGROUND_GREEN | BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
     cout << endl << "Geld: " << Geld;
 
 }
@@ -295,21 +296,24 @@ mciSendString("play MY_SND repeat",0,0,0);
 
 
 // FOREGROUND_YELLOW + FOREGROUND_INTENSITY
-SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
+//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+//FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
 
 
 
 system("color F0");
 
 // FOREGROUND_YELLOW + FOREGROUND_INTENSITY + BACKGROUND_RED + BACKGROUND_INTENSITY
-SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | BACKGROUND_INTENSITY | BACKGROUND_RED);
+//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+//FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | BACKGROUND_INTENSITY | BACKGROUND_RED);
 
 //WinExec(HHH.c_str(),0);
 //ShellExecute(NULL, "open", "P:\\Programme\\mpg123\\mpg123.exe", "P:\\Programme\\mpg123\\mpg123\\8-bit.mp3", NULL, SW_SHOWNORMAL);
 //system("vlc P:\\Programme\\mpg123\\mpg123.exe --no-gapless P:\\Programme\\mpg123\\8-bit.mp3");
 //system("pause");
+
+int Map_Zeilen;
+int Map_Buchstaben;
 
 while(true)
 {
@@ -317,10 +321,19 @@ while(true)
     //system("cls"); //Wenn Aktiv: Erste Zeile blinkt, da Befehl zu langsahm!
      gotoXY(0,0);
 
-    for(size_t i=0; i < 10; i++)
-    {
-        cout << Spielfeld[Level][i];
-    }
+
+    //for(size_t i=0; i < 10; i++)
+    //{
+    //    cout << Spielfeld[Level][i];
+    //}
+
+    for(Map_Zeilen=0; Map_Zeilen < sizeof(Spielfeld)/sizeof(char); Map_Zeilen++)
+        for(Map_Buchstaben=0; Map_Buchstaben < 10; Map_Buchstaben++)
+        {
+            //cout << Spielfeld[Level][Map_Zeilen].at(Map_Buchstaben);
+            cout << Spielfeld[Level][Map_Zeilen];
+        }
+        cout << endl;
 
 
 
